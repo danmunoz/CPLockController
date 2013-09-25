@@ -10,17 +10,14 @@
 
 #define kCPLCDefaultSetPrompt			@"Enter your new passcode"
 #define kCPLCDefaultAuthPrompt			@"Enter your passcode"
-
 #define kCPLCDefaultSetTitle			@"Set Passcode"
 #define kCPLCDefaultConfirmTitle		@"Confirm Passcode"
 #define kCPLCDefaultAuthTitle			@"Enter Passcode"
-
 #define kCPLCDefaultSetError			@"Passcodes did not match. Try again."
 #define kCPLCDefaultAuthError			@"Passcode incorrect. Try again."
 
 //private methods
 @interface CPLockController()
-
 
 - (void)setupSubviews;
 - (void)setupNavigationBar;
@@ -38,11 +35,6 @@
 
 @end
 
-
-
-
-
-
 @implementation CPLockController
 @synthesize delegate,style,passcode,prompt,hiddenField,navigationItem,promptLabel,subPromptLabel,tempString,retry,title,hideCode;
 
@@ -52,32 +44,19 @@
 		self.retry = NO;
 		self.tempString = [NSMutableString string];
 		self.hideCode = YES;
-		
 	}
-	
 	return self;
 }
 
-
-/*
-- (void)loadView {
-	self.view = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
-}
-*/
- 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	
 	//needs a delegate
 	assert(delegate != nil);
-	
 	//check if passcode is set for CPLockControllerTypeAuth
 	if(style == CPLockControllerTypeAuth){
 		assert(passcode != nil);
 	}
-	
 	[self setupSubviews];
-	
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -89,9 +68,7 @@
 }
 
 - (void)setupSubviews {
-
 	self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
-
 	//prompt
 	if (IS_IPAD) {
 		promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 85, 540, 25)];
@@ -105,7 +82,6 @@
 			prompt = kCPLCDefaultAuthPrompt;
 		} 
 	}
-	
 	//main prompt
 	promptLabel.text = prompt;
 	promptLabel.textAlignment = UITextAlignmentCenter;
@@ -115,7 +91,6 @@
     promptLabel.shadowOffset = CGSizeMake(0, -0.75);
 	promptLabel.textColor = [UIColor colorWithRed:0.318 green:0.345 blue:0.416 alpha:1.000];	
 	[self.view addSubview:promptLabel];
-
 	//sub prompt- used for errors
 	if (IS_IPAD) {
 		subPromptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 190, 540, 25)];
@@ -127,18 +102,14 @@
 	subPromptLabel.textColor = [UIColor colorWithRed:0.318 green:0.345 blue:0.416 alpha:1.000];;
 	subPromptLabel.font = [UIFont systemFontOfSize:14];
 	[self.view addSubview:subPromptLabel];
-	
 	//bar
 	[self setupNavigationBar];
-
 	//text fields
 	[self setupTextFields];
 }
 
 - (void)setupNavigationBar {
-	
 	UINavigationBar *navBar;
-	
 	if (IS_IPAD) {
 		navBar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0,0,540,50)];
 	} else {
@@ -153,9 +124,7 @@
 																						target:self
 																						action:@selector(userDidCancel:)] autorelease]
 								 animated:NO];
-	
 	[navBar pushNavigationItem:navigationItem animated:NO];
-	
 	if(self.title == nil){
 		if(self.style == CPLockControllerTypeSet){
 			//[self setTitle:kCPLCDefaultSetTitle];
@@ -167,7 +136,6 @@
 	} else {
 		navigationItem.title = title;
 	}
-								 
 }
 
 - (void)setupTextFields {
@@ -177,11 +145,9 @@
 	int height = 52;
 	int padding = 15;
 	CGFloat fontsize = 32;
-	
 	if (IS_IPAD) {
 		leftpadding = 120;
 	}
-	
 	//create four textfields
 	field1 = [[UITextField alloc]initWithFrame:CGRectMake(leftpadding,toppadding,width,height)];
 	field1.backgroundColor = [UIColor whiteColor];
@@ -192,8 +158,6 @@
 	field1.textAlignment = UITextAlignmentCenter;
 	field1.tag = 0;
 	[self.view addSubview:field1];
-	
-
 	field2 = [[UITextField alloc]initWithFrame:CGRectMake(leftpadding+width+padding,toppadding,61,height)];
 	field2.backgroundColor = [UIColor whiteColor];
 	field2.borderStyle = UITextBorderStyleBezel;
@@ -203,7 +167,6 @@
 	field2.textAlignment = UITextAlignmentCenter;
 	field2.tag = 2;
 	[self.view addSubview:field2];
-
 	field3 = [[UITextField alloc]initWithFrame:CGRectMake(leftpadding+width*2+padding*2,toppadding,61,height)];
 	field3.backgroundColor = [UIColor whiteColor];
 	field3.borderStyle = UITextBorderStyleBezel;
@@ -213,7 +176,6 @@
 	field3.textAlignment = UITextAlignmentCenter;	
 	field3.tag = 3;
 	[self.view addSubview:field3];
-	
 	field4 = [[UITextField alloc]initWithFrame:CGRectMake(leftpadding+width*3+padding*3,toppadding,61,height)];
 	field4.backgroundColor = [UIColor whiteColor];
 	field4.borderStyle = UITextBorderStyleBezel;
@@ -223,7 +185,6 @@
 	field4.textAlignment = UITextAlignmentCenter;	
 	field4.tag = 4;
 	[self.view addSubview:field4];	
-	
 	//this is the field the passcode is put into
 	hiddenField = [[UITextField alloc]initWithFrame:CGRectMake(-3000,-3000,0,0)];
 	hiddenField.text = @"";
@@ -231,21 +192,15 @@
 	[hiddenField becomeFirstResponder];
 	hiddenField.delegate = self;	
 	[self.view addSubview:hiddenField];
-	
-	
-
-	
 }
 
 #pragma mark -
 #pragma mark UITextFieldDelegate Method
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
 	int charcount = [textField.text length];
-    
 	if(([string isEqualToString:@""] && charcount > 0) && [tempString length] > 0){
 		charcount-=1;
 	}
-	
 	if(charcount == 0){
 		field1.text = string;
 	} else if(charcount == 1){
@@ -263,21 +218,15 @@
         r.length = 1;
         [self.tempString deleteCharactersInRange:r];
 	}
-    
 	//we've reached 4 chars
 	if(charcount == 3){
-		
 		if(self.style == CPLockControllerTypeSet){
-			
 			if(passcode == nil){
 				//empty tempstring to passcode string
 				passcode = [self.tempString copy];
-                
 				self.tempString = [NSMutableString string];
-                
 				//reset visible/hidden fields
 				[self resetFields];
-				
 				promptLabel.text = kCPLCDefaultConfirmTitle;
 				return NO;
 			} else {
@@ -291,9 +240,7 @@
 					[self passcodeDidNotMatch];
                     return NO;
 				}
-				
 			}
-			
 		} else if(self.style == CPLockControllerTypeAuth){
 			// check to see if delegate wants to verify first
 			if ([delegate respondsToSelector:@selector(lockControllerShouldAcceptPasscode:)]) {
@@ -315,11 +262,8 @@
 					return NO;
 				}	
 			}
-			
 		}
-		
 	}
-	
 	return YES;
 }
 
@@ -343,9 +287,7 @@
 }
 
 - (void)dissmissView {
-	
 	[self dismissModalViewControllerAnimated:YES];
-	
 }
 
 - (void)userDidCancel:(id)sender {
@@ -362,8 +304,6 @@
 	[navigationItem release];
 	[tempString release];
     [super dealloc];
-	
 }
-
 
 @end

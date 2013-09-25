@@ -37,7 +37,6 @@ CPLockControllerTypeSet
 	NSString *title;
 	id <CPLockControllerDelegate, NSObject> delegate;
 	BOOL hideCode;
-	
 	//Private vars
 	BOOL retry;	
 	NSMutableString *tempString;	
