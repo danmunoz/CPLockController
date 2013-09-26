@@ -68,7 +68,7 @@
 }
 
 - (void)setupSubviews {
-	self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	self.view.backgroundColor = [UIColor whiteColor];
 	//prompt
 	if (IS_IPAD) {
 		promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 85, 540, 25)];

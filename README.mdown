@@ -21,7 +21,7 @@ Using CPLockController in your project
 
 		#pragma mark CPLockControllerDelegate Methods
 		
-		- (void)lockControllerDidFinish:(NSString*)passcode {
+		- (void)lockController:(CPLockController *)lockController didFinish:(NSString *)passcode{
 			//called when the controller is finished
 			//a passcode is passed only when setting a new code
 			if(passcode){
@@ -31,7 +31,7 @@ Using CPLockController in your project
 			}
 		}
 		
-		- (void)lockControllerDidCancel {
+		- (void)lockControllerDidCancel:(CPLockController *)lockController{
 			//called when user hits cancel button
 			NSLog(@"user cancelled auth");
 		}
