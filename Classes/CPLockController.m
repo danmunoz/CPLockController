@@ -50,6 +50,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserver:self selector:@selector(keyboardDidHide) name:UIKeyboardWillHideNotification object:nil];
 	//needs a delegate
 	assert(delegate != nil);
 	//check if passcode is set for CPLockControllerTypeAuth or CPLockControllerTypeForceAuth
@@ -68,6 +70,7 @@
 }
 
 - (void)setupSubviews {
+    isLeaving = NO;
 	self.view.backgroundColor = [UIColor whiteColor];
 	//prompt
 	if (IS_IPAD) {
@@ -232,6 +235,7 @@
 			} else {
 				//check if confirm matches first
 				if([passcode isEqualToString:self.tempString]){
+                    isLeaving = YES;
 					[delegate lockController:self didFinish:passcode];
 					return NO;
                     //confirm passcode doesn't match
@@ -245,6 +249,7 @@
 			// check to see if delegate wants to verify first
 			if ([delegate respondsToSelector:@selector(lockControllerShouldAcceptPasscode:)]) {
 				if ([delegate lockController:self shouldAcceptPasscode:self.tempString]) {
+                    isLeaving = YES;
 					[delegate lockController:self didFinish:nil];
 				} else {
 					// delegate rejected passcode
@@ -253,6 +258,7 @@
 				}
 			} else {
 				if([passcode isEqualToString:self.tempString]){
+                    isLeaving = YES;
 					[delegate lockController:self didFinish:nil];
 				} else {
 					[self passcodeDidNotMatch];
@@ -283,16 +289,18 @@
     } completion:^(BOOL finished){
         [self.subPromptLabel setText:@""];
         [self.subPromptLabel setAlpha:1.0f];
-        [UIView animateWithDuration:0.25f animations:^{
-            [self.promptLabel setAlpha:0.0f];
-        } completion:^(BOOL finished){
-            [self.promptLabel setText:prompt];
+        if (style == CPLockControllerTypeSet || style == CPLockControllerTypeForceSet) {
             [UIView animateWithDuration:0.25f animations:^{
-                [self.promptLabel setAlpha:1.0f];
+                [self.promptLabel setAlpha:0.0f];
             } completion:^(BOOL finished){
-                
+                [self.promptLabel setText:prompt];
+                [UIView animateWithDuration:0.25f animations:^{
+                    [self.promptLabel setAlpha:1.0f];
+                } completion:^(BOOL finished){
+                    
+                }];
             }];
-        }];
+        }
     }];
 }
 
@@ -304,7 +312,18 @@
     hiddenField.text = @"";
 }
 
+- (void)keyboardDidHide{
+    if (!isLeaving) {
+        [self performSelector:@selector(showKeyboard) withObject:nil afterDelay:0.3];
+    }
+}
+
+- (void)showKeyboard{
+    [self.hiddenField becomeFirstResponder];
+}
+
 - (void)userDidCancel:(id)sender {
+    isLeaving = YES;
 	[delegate lockControllerDidCancel:self];
     /* user must implement
      * [self dismissViewControllerAnimated:YES completion:nil];

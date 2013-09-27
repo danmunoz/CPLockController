@@ -52,6 +52,7 @@ typedef enum {
 	UITextField *field2;
 	UITextField *field3;
 	UITextField *field4;
+    BOOL isLeaving;
 }
 
 @property (nonatomic, assign) id <CPLockControllerDelegate, NSObject> delegate;
