@@ -37,11 +37,12 @@
 	} else {
 		NSLog(@"passcode accepted!");
 	}
-	
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)lockControllerDidCancel:(CPLockController *)lockController {
 	NSLog(@"user cancelled auth");
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 

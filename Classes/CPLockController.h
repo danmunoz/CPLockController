@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) 
+#define IS_IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
 
 typedef enum {
-CPLockControllerTypeAuth,
-CPLockControllerTypeSet
+    CPLockControllerTypeAuth,
+    CPLockControllerTypeForceAuth,
+    CPLockControllerTypeSet,
+    CPLockControllerTypeForceSet
 } CPLockControllerStyle;
 
 @class CPLockController;
@@ -38,8 +40,8 @@ CPLockControllerTypeSet
 	id <CPLockControllerDelegate, NSObject> delegate;
 	BOOL hideCode;
 	//Private vars
-	BOOL retry;	
-	NSMutableString *tempString;	
+	BOOL retry;
+	NSMutableString *tempString;
 	//UI Elements
 	UITextField *hiddenField;
 	UINavigationItem *navigationItem;
