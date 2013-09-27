@@ -5,6 +5,7 @@
 //  Created by Chris Purcell on 2/14/10.
 //  Copyright 2010 . All rights reserved.
 //
+//  Updated by Daniel Munoz on 09/26/13
 
 #import "CPLockController.h"
 
@@ -118,7 +119,7 @@
 	navigationItem = [[UINavigationItem alloc]init];
     if (self.style != CPLockControllerTypeForceAuth && self.style != CPLockControllerTypeForceSet) {
         [navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self
-                                             action:@selector(userDidCancel:)] autorelease]
+                                                                                            action:@selector(userDidCancel:)] autorelease]
                                      animated:NO];
     }
 	
@@ -235,6 +236,7 @@
 					return NO;
                     //confirm passcode doesn't match
 				} else {
+                    passcode = nil;
 					[self passcodeDidNotMatch];
                     return NO;
 				}
@@ -275,7 +277,7 @@
 }
 
 - (void)resetTextAnimating{
-    passcode = nil;
+    //    tempString = nil;
     [UIView animateWithDuration:0.6f animations:^{
         [self.subPromptLabel setAlpha:0.0f];
     } completion:^(BOOL finished){
@@ -295,16 +297,16 @@
 }
 
 - (void)resetFields {
-        field1.text = @"";
-        field2.text = @"";
-        field3.text = @"";
-        field4.text = @"";
-        hiddenField.text = @"";
+    field1.text = @"";
+    field2.text = @"";
+    field3.text = @"";
+    field4.text = @"";
+    hiddenField.text = @"";
 }
 
 - (void)userDidCancel:(id)sender {
 	[delegate lockControllerDidCancel:self];
-    /* user must implement 
+    /* user must implement
      * [self dismissViewControllerAnimated:YES completion:nil];
      * on the delegate
      */
