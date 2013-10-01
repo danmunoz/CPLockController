@@ -76,7 +76,7 @@
 	if (IS_IPAD) {
 		promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 85, 540, 25)];
 	} else {
-		promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 85, 320, 25)];
+		promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 55, self.view.frame.size.width, 25)];
 	}
 	if(prompt == nil){
 		if(self.style == CPLockControllerTypeSet || self.style == CPLockControllerTypeForceSet){
@@ -110,7 +110,6 @@
 }
 
 - (void)setupNavigationBar {
-	UINavigationBar *navBar;
 	if (IS_IPAD) {
 		navBar = [[UINavigationBar alloc]initWithFrame:CGRectMake(0,0,540,50)];
 	} else {
@@ -118,7 +117,7 @@
 	}
     [navBar setTranslucent:YES];
 	[self.view addSubview:navBar];
-	[navBar release];
+    //	[navBar release];
 	navigationItem = [[UINavigationItem alloc]init];
     if (self.style != CPLockControllerTypeForceAuth && self.style != CPLockControllerTypeForceSet) {
         [navigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self
@@ -339,6 +338,44 @@
 	[navigationItem release];
 	[tempString release];
     [super dealloc];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+    [self adjustViewsToOrientation:toInterfaceOrientation];
+}
+
+- (void)adjustViewsToOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+    CGRect prompLabelRect = promptLabel.frame;
+    CGRect navVarRect = navBar.frame;
+    int toppadding = 125;
+	int leftpadding = 15;
+	int width = 61;
+	int height = 52;
+	int padding = 15;
+    
+    if (IS_IPAD) {
+        //		promptLabel.frame = CGRectMake(prompLabelRect.origin.x, prompLabelRect.origin.y, prompLabelRect.size.width, prompLabelRect.size.height);
+	} else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            promptLabel.frame = CGRectMake(prompLabelRect.origin.x, prompLabelRect.origin.y, self.view.frame.size.height, prompLabelRect.size.height);
+            navBar.frame =CGRectMake(navVarRect.origin.x, navVarRect.origin.y, self.view.frame.size.height, navVarRect.size.height);
+            leftpadding = (self.view.frame.size.height-289)/2;
+            toppadding -= 30;
+            field1.frame = CGRectMake(leftpadding,toppadding,width,height);
+            field2.frame = CGRectMake(leftpadding+width+padding,toppadding,61,height);
+            field3.frame = CGRectMake(leftpadding+width*2+padding*2,toppadding,61,height);
+            field4.frame = CGRectMake(leftpadding+width*3+padding*3,toppadding,61,height);
+        }
+        else{
+            promptLabel.frame = CGRectMake(prompLabelRect.origin.x, prompLabelRect.origin.y, self.view.frame.size.width, prompLabelRect.size.height);
+            navBar.frame =CGRectMake(navVarRect.origin.x, navVarRect.origin.y, self.view.frame.size.width, navVarRect.size.height);
+            field1.frame = CGRectMake(leftpadding,toppadding,width,height);
+            field2.frame = CGRectMake(leftpadding+width+padding,toppadding,61,height);
+            field3.frame = CGRectMake(leftpadding+width*2+padding*2,toppadding,61,height);
+            field4.frame = CGRectMake(leftpadding+width*3+padding*3,toppadding,61,height);
+        }
+		
+	}
 }
 
 @end

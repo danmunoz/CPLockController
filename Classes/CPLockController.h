@@ -45,6 +45,7 @@ typedef enum {
 	NSMutableString *tempString;
 	//UI Elements
 	UITextField *hiddenField;
+    UINavigationBar *navBar;
 	UINavigationItem *navigationItem;
 	UILabel *promptLabel;
 	UILabel *subPromptLabel;
